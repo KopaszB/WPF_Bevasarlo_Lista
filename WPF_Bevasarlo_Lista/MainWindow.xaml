@@ -65,12 +65,17 @@
                     Foreground="White"
                     Background="#FF364958" Click="bt_ujlista_Click"/>
             <Button x:Name="bt_listabetolt"
-                    Content="Lista betöltése"
-                    Margin="5"
+                    Content="Mentett listak"
+                    Margin="5 20 5 0"
                     FontWeight="Bold"
                     Foreground="White"
-                    Background="#FF364958" 
+                    Background="#FF364958"
+                    Height="auto"
+                    Width="auto" Click="bt_listabetolt_Click"
                     />
+            <ComboBox Name="cbx_mentettListak"
+                      Margin="5" SelectionChanged="cbx_mentettListak_SelectionChanged_1"
+                      />
         </StackPanel>
         <StackPanel Grid.Row="3"
                     Grid.Column="0"

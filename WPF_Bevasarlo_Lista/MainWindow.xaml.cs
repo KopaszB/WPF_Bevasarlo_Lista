@@ -22,6 +22,7 @@ namespace WPF_Bevasarlo_Lista
     public partial class MainWindow : Window
     {
         private List<object> lista = new List<object>();
+        string fajlnev;
         public MainWindow()
         {
             InitializeComponent();
@@ -100,11 +101,11 @@ namespace WPF_Bevasarlo_Lista
 
         private void btn_listamentese_Click(object sender, RoutedEventArgs e)
         {
+            fajlnev = tbx_listaneve.Text + ".txt";
             if (tbx_listaneve.Text!="")
             {
                 if (lb_termeklista.Items.Count > 0)
                 {
-                    string fajlnev = $"{tbx_listaneve.Text}.txt";
                     using (StreamWriter iro = new StreamWriter(fajlnev))
                     {
                         foreach (var item in lista)
@@ -114,6 +115,7 @@ namespace WPF_Bevasarlo_Lista
                     }
                     lb_termeklista.Items.Clear();
                     tbx_listaneve.Clear();
+                    lista.Clear();
                     MessageBox.Show("A lista mentésre került", "Sikeres mentés", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
@@ -127,6 +129,47 @@ namespace WPF_Bevasarlo_Lista
                 MessageBox.Show("Hiányzó listanév!", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             
+        }
+
+        private void bt_listabetolt_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> txtFajlok = new List<string>();
+            string mappa = @"C:\Users\user\source\repos\WPF_Bevasarlo_Lista\WPF_Bevasarlo_Lista\bin\Debug";
+            if (Directory.Exists(mappa))
+            {
+                string[] fajlok = Directory.GetFiles(mappa, "*.txt");
+                foreach (var item in fajlok)
+                {
+                    txtFajlok.Add(System.IO.Path.GetFileName(item));
+                }
+                foreach (string item in txtFajlok)
+                {
+                    int pontIndex = item.LastIndexOf(".");
+                    string fajlnevTxtNelkul = item.Substring(0,pontIndex);
+                    cbx_mentettListak.Items.Add(fajlnevTxtNelkul);
+                    cbx_mentettListak.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nincs ilyen mappa!","Hiba!",MessageBoxButton.OK,MessageBoxImage.Error);
+            }
+        }
+
+        private void cbx_mentettListak_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            lb_termeklista.Items.Clear();
+            string txtFajl = cbx_mentettListak.SelectedItem.ToString()+".txt";
+            using (StreamReader olvas = new StreamReader(txtFajl))
+            {
+                while (!olvas.EndOfStream)
+                {
+                    string sor = olvas.ReadLine();
+                    ListBoxItem listaElem = new ListBoxItem();
+                    listaElem.Content = sor;
+                    lb_termeklista.Items.Add(listaElem);
+                }
+            }
         }
     }
 }
